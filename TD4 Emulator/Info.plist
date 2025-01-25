@@ -2,42 +2,43 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleHelpBookFolder</key>
+	<string></string>
 	<key>UTExportedTypeDeclarations</key>
-<array>
-    <dict>
-        <key>UTTypeIdentifier</key>
-        <string>com.example.td4bin</string>
-        <key>UTTypeDescription</key>
-        <string>TD4 Binary File</string>
-        <key>UTTypeConformsTo</key>
-        <array>
-            <string>public.data</string>
-        </array>
-        <key>UTTypeTagSpecification</key>
-        <dict>
-            <key>public.filename-extension</key>
-            <array>
-                <string>td4bin</string>
-                <string>td4b</string>
-            </array>
-            <key>public.mime-type</key>
-            <string>application/x-td4bin</string>
-        </dict>
-    </dict>
-</array>
-
-<key>CFBundleDocumentTypes</key>
-<array>
-    <dict>
-        <key>CFBundleTypeName</key>
-        <string>TD4 Binary File</string>
-        <key>LSHandlerRank</key>
-        <string>Owner</string>
-        <key>LSItemContentTypes</key>
-        <array>
-            <string>com.example.td4bin</string>
-        </array>
-    </dict>
-</array>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.example.td4bin</string>
+			<key>UTTypeDescription</key>
+			<string>TD4 Binary File</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>td4bin</string>
+					<string>td4b</string>
+				</array>
+				<key>public.mime-type</key>
+				<string>application/x-td4bin</string>
+			</dict>
+		</dict>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>TD4 Binary File</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.example.td4bin</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

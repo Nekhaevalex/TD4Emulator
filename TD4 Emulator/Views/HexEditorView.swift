@@ -18,8 +18,10 @@ struct HexEditorView: View {
                         HStack {
                             Text(String(format: "%04X", index))
                             Text(String(format: "0x%02X", cpu.rom[Int(index)]))
-//                            TextField("", value: cpu.rom[Int(index)], formatter: HexNumberFormatter())
                             Text(instructionToString(cpu.rom[Int(index)]))
+                        }
+                        .onTapGesture {
+                            cpu.programCounter = UInt8(index)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(myFont)

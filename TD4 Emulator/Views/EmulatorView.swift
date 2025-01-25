@@ -18,28 +18,30 @@ struct EmulatorView: View {
     }
     
     var body: some View {
-            HStack {
-                VStack {
-                    // Registers
-                    RegisterView(cpu: cpu)
-                    // CPU Controls
-                    HStack {
-                        Button("Step") {
-                            do {
-                                try cpu.step()
-                            } catch {
-                                self.error = error
-                            }
-                        }
-                        Button("Reset") {
-                            cpu.reset()
+        HStack {
+            VStack {
+                // Registers
+                RegisterView(cpu: cpu)
+                Divider()
+                ProgramInputView(value: $cpu.rom[Int(cpu.programCounter)])
+                // CPU Controls
+                HStack {
+                    Button("Step") {
+                        do {
+                            try cpu.step()
+                        } catch {
+                            self.error = error
                         }
                     }
-                    Spacer()
+                    Button("Reset") {
+                        cpu.reset()
+                    }
                 }
-                // Program listing
-                HexEditorView(cpu: cpu)
+                Spacer()
             }
+            // Program listing
+            HexEditorView(cpu: cpu)
+        }
     }
 }
 

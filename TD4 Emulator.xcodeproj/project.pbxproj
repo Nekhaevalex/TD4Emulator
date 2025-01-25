@@ -34,6 +34,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Views/HexEditorView.swift,
+				Views/ProgramInputView.swift,
 			);
 			target = FAD2BC382D42C9DA00AC4534 /* TD4 EmulatorUITests */;
 		};

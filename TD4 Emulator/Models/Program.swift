@@ -8,6 +8,10 @@
 import Foundation
 
 func instructionToString(_ instruction: UInt8) -> String {
+    if instruction == 0 {
+        return "nop"
+    }
+    
     let opcode = (instruction >> 4)
     let imm = instruction & 0x0F
     
@@ -42,9 +46,12 @@ func instructionToString(_ instruction: UInt8) -> String {
         opcodeString = "nop"
     }
     
-    if opcodeString.hasSuffix(", ") {
+    if opcodeString.hasSuffix(", ") || opcode == 0b1011 || opcode == 0b1110 || opcode == 0b1111 {
         return opcodeString + String(imm).trimmingCharacters(in: .whitespacesAndNewlines)
     } else {
+        if imm == 0 && opcode != 0b1111 && opcode != 0b1110 && opcode != 0b1011 {
+            return opcodeString
+        }
         return opcodeString + "+" + String(imm).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
