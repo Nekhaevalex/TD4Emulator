@@ -10,8 +10,8 @@ import SwiftUI
 @main
 struct TD4_EmulatorApp: App {
     var body: some Scene {
-        DocumentGroup(newDocument: TD4_EmulatorDocument()) { file in
-            ContentView(document: file.$document)
+        DocumentGroup(newDocument: TD4BinaryFile()) { file in
+            EmulatorView(document: file.$document)
         }
     }
 }

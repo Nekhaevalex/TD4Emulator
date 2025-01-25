@@ -30,12 +30,29 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FA46F2142D4447420049FA25 /* Exceptions for "TD4 Emulator" folder in "TD4 EmulatorUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Views/HexEditorView.swift,
+			);
+			target = FAD2BC382D42C9DA00AC4534 /* TD4 EmulatorUITests */;
+		};
 		FAD2BC412D42C9DA00AC4534 /* Exceptions for "TD4 Emulator" folder in "TD4 Emulator" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = FAD2BC1A2D42C9D900AC4534 /* TD4 Emulator */;
+		};
+		FAD2BC712D4304B100AC4534 /* Exceptions for "TD4 Emulator" folder in "TD4 EmulatorTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/Misc.swift,
+				Models/Program.swift,
+				Models/TD4CPU.swift,
+				Views/RegisterView.swift,
+			);
+			target = FAD2BC2E2D42C9DA00AC4534 /* TD4 EmulatorTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -44,6 +61,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				FAD2BC412D42C9DA00AC4534 /* Exceptions for "TD4 Emulator" folder in "TD4 Emulator" target */,
+				FAD2BC712D4304B100AC4534 /* Exceptions for "TD4 Emulator" folder in "TD4 EmulatorTests" target */,
+				FA46F2142D4447420049FA25 /* Exceptions for "TD4 Emulator" folder in "TD4 EmulatorUITests" target */,
 			);
 			path = "TD4 Emulator";
 			sourceTree = "<group>";
