@@ -9,24 +9,26 @@ import SwiftUI
 
 struct HexEditorView: View {
     @ObservedObject var cpu: TD4CPU
+    @Binding var document: TD4BinaryFile
     
     var body: some View {
         GroupBox("ROM") {
             ScrollView {
                 LazyVStack {
-                    ForEach(cpu.rom.indices, id: \.self) { index in
+                    ForEach(document.text.indices, id: \.self) { index in
                         HStack {
                             Text(String(format: "%04X", index))
-                            Text(String(format: "0x%02X", cpu.rom[Int(index)]))
-                            Text(instructionToString(cpu.rom[Int(index)]))
+                            Text(String(format: "0x%02X", document.text[Int(index)]))
+                            Text(instructionToString(document.text[Int(index)]))
+                            Spacer()
                         }
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             cpu.programCounter = UInt8(index)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                         .font(myFont)
                         .foregroundStyle(index == cpu.programCounter ? Color.white : Color.primary)
-                        .background(index == cpu.programCounter ? Color.blue : Color.clear)
+                        .background(index == cpu.programCounter ? Color.accentColor : (index % 2 == 0 ? Color.gray.opacity(0.1) : Color.clear))
                         .bold(index == cpu.programCounter)
                     }
                 }
@@ -37,5 +39,6 @@ struct HexEditorView: View {
 
 #Preview {
     @Previewable @State var cpu = TD4CPU([64, 144, 17, 224, 244])
-    HexEditorView(cpu: cpu)
+    @Previewable @State var document = TD4BinaryFile(text: [64, 144, 17, 224, 244])
+    HexEditorView(cpu: cpu, document: $document)
 }

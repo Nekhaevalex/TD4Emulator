@@ -14,16 +14,18 @@ struct RegisterView: View {
         VStack {
             GroupBox(label: Text("General Purpose Registers")) {
                 Group {
-                    VStack {
+                    HStack {
                         HStack {
                             Text("A")
-                                .frame(width: 50)
+                                .fixedSize(horizontal: true, vertical: true)
                             TextField("Register A Value", value: $cpu.regA, formatter: HexNumberFormatter())
+                                .fixedSize(horizontal: true, vertical: true)
                         }
                         HStack {
                             Text("B")
-                                .frame(width: 50)
+                                .fixedSize(horizontal: true, vertical: true)
                             TextField("Register B Value", value: $cpu.regB, formatter: HexNumberFormatter())
+                                .fixedSize(horizontal: true, vertical: true)
                         }
                     }
                 }
@@ -32,17 +34,19 @@ struct RegisterView: View {
             }
             GroupBox(label: Text("I/O Registers")) {
                 Group {
-                    VStack {
+                    HStack {
                         HStack {
                             Text("In")
-                                .frame(width: 50)
+                                .fixedSize(horizontal: true, vertical: true)
                                 .font(myFont)
                             TextField("Input value", value: $cpu.regIn, formatter: HexNumberFormatter())
+                                .fixedSize(horizontal: true, vertical: true)
                         }
                         HStack {
                             Text("Out")
-                                .frame(width: 50)
+                                .fixedSize(horizontal: true, vertical: true)
                             TextField("Output value", value: $cpu.regOut, formatter: HexNumberFormatter())
+                                .fixedSize(horizontal: true, vertical: true)
                         }
                     }
                 }
@@ -51,16 +55,19 @@ struct RegisterView: View {
             }
             GroupBox(label: Text("Special Registers")) {
                 Group {
-                    VStack {
+                    HStack {
                         HStack {
                             Text("PC")
-                                .frame(width: 50)
+                                .fixedSize(horizontal: true, vertical: true)
                             TextField("Program Counter Value", value: $cpu.programCounter, formatter: HexNumberFormatter())
+                                .fixedSize(horizontal: true, vertical: true)
                         }
                         Toggle(isOn: $cpu.carryFlag) {
                             Text("CF")
                         }
+#if os(macOS)
                         .toggleStyle(CheckboxToggleStyle())
+#endif
                     }
                 }
                 .font(myFont)

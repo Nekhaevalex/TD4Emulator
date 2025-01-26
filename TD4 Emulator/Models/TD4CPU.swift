@@ -41,10 +41,10 @@ class TD4CPU: ObservableObject {
     private var carryFlagDrop: Bool = false
     
     // ROM – program storage
-    @Published var rom: [UInt8] = Array(repeating: 0, count: 16)
+    @Published var rom: [UInt8]? = Array(repeating: 0, count: 16)
     
-    private func fetch() -> UInt8 {
-        return rom[Int(programCounter)]
+    private func fetch(_ program: TD4BinaryFile) -> UInt8 {
+        return program.text[Int(programCounter)]
     }
     
     private func decode(_ instruction: UInt8) -> (opcode: UInt8, operand: UInt8) {
@@ -128,8 +128,8 @@ class TD4CPU: ObservableObject {
         carryFlagDrop = false
     }
     
-    public func step() throws(TD4CpuError) {
-        let instruction: UInt8 = rom[Int(programCounter)]
+    public func step(_ program: TD4BinaryFile) throws(TD4CpuError) {
+        let instruction: UInt8 = fetch(program)
         
         let (opcode, operand) = decode(instruction)
         
@@ -138,15 +138,5 @@ class TD4CPU: ObservableObject {
         } catch let error {
             throw error
         }
-    }
-    
-    public func loadProgram(_ program: [UInt8]) throws(TD4CpuError) {
-        guard program.count <= 16 else {
-            throw .romOverflow
-        }
-        for (index, byte) in program.enumerated() {
-            rom[index] = byte
-        }
-        reset()
     }
 }

@@ -10,7 +10,6 @@ import SwiftUI
 struct EmulatorView: View {
     @Binding var document: TD4BinaryFile
     @StateObject private var cpu: TD4CPU
-    @State private var error: Error?
     
     init(document: Binding<TD4BinaryFile>) {
         _document = document
@@ -23,14 +22,14 @@ struct EmulatorView: View {
                 // Registers
                 RegisterView(cpu: cpu)
                 Divider()
-                ProgramInputView(value: $cpu.rom[Int(cpu.programCounter)])
+                ProgramInputView(value: $document.text[Int(cpu.programCounter)])
                 // CPU Controls
                 HStack {
                     Button("Step") {
                         do {
-                            try cpu.step()
+                            try cpu.step(document)
                         } catch {
-                            self.error = error
+                            
                         }
                     }
                     Button("Reset") {
@@ -39,9 +38,13 @@ struct EmulatorView: View {
                 }
                 Spacer()
             }
+            .padding(5)
+            .frame(width: 200)
             // Program listing
-            HexEditorView(cpu: cpu)
+            HexEditorView(cpu: cpu, document: $document)
+                .padding(5)
         }
+        .frame(minWidth: 500)
     }
 }
 

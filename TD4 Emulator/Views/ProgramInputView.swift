@@ -11,8 +11,23 @@ struct ProgramInputView: View {
     @Binding var value: UInt8
     var body: some View {
         GroupBox("Program Input") {
-            TextField("Instruction Hex", value: $value, formatter: HexNumberFormatter())
+            HStack{
+                Text("Dec:")
+                    .frame(width: 30, alignment: .leading)
+                TextField("Instruction decimal", value: $value, formatter: NumberFormatter())
+            }
+            HStack{
+                Text("Hex:")
+                    .frame(width: 30, alignment: .leading)
+                TextField("Instruction hex", value: $value, formatter: HexNumberFormatter())
+            }
+            HStack{
+                Text("Bin:")
+                    .frame(width: 30, alignment: .leading)
+                TextField("Instruction hex", value: $value, formatter: BinNumberFormatter())
+            }
         }
+        .font(myFont)
     }
 }
 
