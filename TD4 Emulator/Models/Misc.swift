@@ -39,7 +39,9 @@ class HexNumberFormatter: Formatter {
 class BinNumberFormatter: Formatter {
     override func string(for obj: Any?) -> String? {
         guard let number = obj as? UInt8 else { return nil }
-        return String(number, radix: 2)
+        let formatted = String(number, radix: 2)
+        let zeroes: [Character] = Array(repeating: "0", count: 8 - formatted.count)
+        return String(zeroes) + formatted
     }
     
     override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {

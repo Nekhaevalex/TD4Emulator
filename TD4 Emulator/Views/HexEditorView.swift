@@ -17,8 +17,10 @@ struct HexEditorView: View {
                 LazyVStack {
                     ForEach(document.text.indices, id: \.self) { index in
                         HStack {
-                            Text(String(format: "%04X", index))
-                            Text(String(format: "0x%02X", document.text[Int(index)]))
+                            Text(String(format: "%02X", index))
+                            Spacer().frame(width: 20)
+                            Text(String(format: "%02X", document.text[Int(index)]))
+                            Spacer().frame(width: 30)
                             Text(instructionToString(document.text[Int(index)]))
                             Spacer()
                         }
