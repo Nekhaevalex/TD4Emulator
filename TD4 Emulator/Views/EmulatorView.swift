@@ -13,7 +13,7 @@ struct EmulatorView: View {
     
     init(document: Binding<TD4BinaryFile>) {
         _document = document
-        _cpu = StateObject(wrappedValue: TD4CPU(document.wrappedValue.text))
+        _cpu = StateObject(wrappedValue: TD4CPU(document.wrappedValue.asArray))
     }
     
     var body: some View {
@@ -22,7 +22,7 @@ struct EmulatorView: View {
                 // Registers
                 RegisterView(cpu: cpu)
                 Divider()
-                ProgramInputView(value: $document.text[Int(cpu.programCounter)])
+                ProgramInputView(value: $document.contents[Int(cpu.programCounter)].hex)
                 // CPU Controls
                 HStack {
                     Button("Step") {
@@ -41,7 +41,7 @@ struct EmulatorView: View {
             .padding(5)
             .frame(width: 200)
             // Program listing
-            HexEditorView(cpu: cpu, document: $document)
+            HexEditorView(cpu: cpu)
                 .padding(5)
         }
         .frame(minWidth: 500)

@@ -14,42 +14,45 @@ extension UTType {
     }
 }
 
+extension Data {
+    var bytes: [UInt8] {
+        return [UInt8](self)
+    }
+}
+
 struct TD4BinaryFile: FileDocument {
-    var text: [UInt8]
+    static var readableContentTypes: [UTType] { [.td4Binary] }
+    var contents: [Instruction]
 
     init(text: [UInt8] = Array(repeating: 0, count: 16)) {
-        if text.count == 16 {
-            self.text = text
-        } else if text.count < 16{
-            self.text = Array(repeating: 0, count: 16)
-            for i in 0..<text.count {
-                self.text[i] = UInt8(text[i])
+        let size = text.count
+        self.contents = text[0..<min(size, 16)]
+            .enumerated()
+            .map { (index, value) in
+                Instruction(index: UInt8(index), hex: value)
             }
-        } else {
-            self.text = Array(text[0..<16])
-        }
     }
-
-    static var readableContentTypes: [UTType] { [.td4Binary] }
 
     init(configuration: ReadConfiguration) throws {
         if let data = configuration.file.regularFileContents {
-            let text = data.bytes
-            if text.count < 16 {
-                self.text = Array(repeating: 0, count: 16)
-                for i in 0..<text.count {
-                    self.text[i] = UInt8(text[i])
+            let bytes = data.bytes
+            let size = bytes.count
+            contents = bytes[0..<min(size, 16)]
+                .enumerated()
+                .map { (index, value) in
+                    Instruction(index: UInt8(index), hex: value)
                 }
-            } else {
-                self.text = Array(text[0..<16])
-            }
         } else {
             throw CocoaError(.fileReadCorruptFile)
         }
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = Data(text)
+        let data = Data(contents.map{x in x.hex})
         return .init(regularFileWithContents: data)
+    }
+    
+    var asArray: [UInt8] {
+        contents.map{$0.hex}
     }
 }
