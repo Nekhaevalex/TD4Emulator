@@ -35,16 +35,38 @@ class TD4CPU: ObservableObject {
     @Published var regOut: UInt8 = 0
     
     // Special registers
-    @Published var programCounter: UInt8 = 0
     @Published var carryFlag: Bool = false
-    
-    private var carryFlagDrop: Bool = false
+    @Published var selected: Instruction.ID? = nil
     
     // ROM – program storage
-    @Published var rom: [UInt8]? = Array(repeating: 0, count: 16)
+    @Published var rom: TD4BinaryFile? = TD4BinaryFile()
+    
+    private var carryFlagDrop: Bool = false
+    public var programCounter: UInt8 {
+        get {
+            guard let constRom = rom else {
+                return 0
+            }
+            guard let instruction = constRom.contents.first(where: {$0.id == selected}) else {
+                return 0
+            }
+            return instruction.index
+        }
+        set(value) {
+            guard let constRom = rom else {
+                selected = nil
+                return
+            }
+            guard value < constRom.contents.count else {
+                selected = nil
+                return
+            }
+            selected = constRom.contents[Int(value)].id
+        }
+    }
     
     private func fetch(_ program: TD4BinaryFile) -> UInt8 {
-        return program.text[Int(programCounter)]
+        return program.contents[Int(programCounter)].hex
     }
     
     private func decode(_ instruction: UInt8) -> (opcode: UInt8, operand: UInt8) {
@@ -108,12 +130,17 @@ class TD4CPU: ObservableObject {
     }
     
     init() {
-        self.rom = Array(repeating: 0, count: 16)
+        self.rom = TD4BinaryFile()
         reset()
     }
     
     init(_ program: [UInt8]) {
-        self.rom = program
+        self.rom = TD4BinaryFile(text: program)
+        reset()
+    }
+    
+    init(_ document: TD4BinaryFile) {
+        self.rom = document
         reset()
     }
     

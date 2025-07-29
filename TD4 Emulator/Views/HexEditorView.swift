@@ -8,32 +8,38 @@
 import SwiftUI
 
 struct HexEditorView: View {
-    @ObservedObject var cpu: TD4CPU
-    @Binding var document: TD4BinaryFile
+    @StateObject var cpu: TD4CPU
     
     var body: some View {
-        GroupBox("ROM") {
-            ScrollView {
-                LazyVStack {
-                    ForEach(document.text.indices, id: \.self) { index in
-                        HStack {
-                            Text(String(format: "%02X", index))
-                            Spacer().frame(width: 20)
-                            Text(String(format: "%02X", document.text[Int(index)]))
-                            Spacer().frame(width: 30)
-                            Text(instructionToString(document.text[Int(index)]))
-                            Spacer()
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            cpu.programCounter = UInt8(index)
-                        }
-                        .font(myFont)
-                        .foregroundStyle(index == cpu.programCounter ? Color.white : Color.primary)
-                        .background(index == cpu.programCounter ? Color.accentColor : (index % 2 == 0 ? Color.gray.opacity(0.1) : Color.clear))
-                        .bold(index == cpu.programCounter)
-                    }
-                }
+        Table(cpu.rom!.contents, selection: $cpu.selected) {
+            TableColumn("Address") { instruction in
+                Text(String(format: "%02X", instruction.index))
+            }
+            .width(50)
+            .alignment(.trailing)
+            
+            TableColumn("Hex") {instruction in
+                Text(String(format: "%02X", instruction.hex))
+            }
+            .width(40)
+            .alignment(.center)
+            
+            TableColumn("Disasm") {instruction in
+                Text(instruction.description)
+                .font(myFont)
+            }
+        }
+        .onChange(of: cpu.selected, initial: true) { prev, instruction  in
+            guard let selection = instruction else {
+                cpu.programCounter = 0
+                cpu.selected = cpu.rom?.contents.first?.id
+                return
+            }
+            let result = cpu.rom?.contents.first(where: {$0.id == selection})
+            if let pureInstr = result {
+                cpu.programCounter = UInt8(pureInstr.index)
+            } else {
+                cpu.programCounter = 0
             }
         }
     }
@@ -41,6 +47,5 @@ struct HexEditorView: View {
 
 #Preview {
     @Previewable @State var cpu = TD4CPU([64, 144, 17, 224, 244])
-    @Previewable @State var document = TD4BinaryFile(text: [64, 144, 17, 224, 244])
-    HexEditorView(cpu: cpu, document: $document)
+    HexEditorView(cpu: cpu)
 }
