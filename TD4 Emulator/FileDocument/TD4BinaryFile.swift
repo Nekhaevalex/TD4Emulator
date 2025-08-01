@@ -20,16 +20,20 @@ extension Data {
     }
 }
 
+@Observable
 class TD4BinaryFile: FileDocument {
     static var readableContentTypes: [UTType] { [.td4Binary] }
     var contents: [Instruction]
+    var asArray: [UInt8] {
+        contents.map{$0.hex}
+    }
 
-    init(text: [UInt8] = Array(repeating: 0, count: 16)) {
+    init(text: [UInt8] = Array(repeating: 0, count: 1)) {
         let size = text.count
         self.contents = text[0..<min(size, 16)]
             .enumerated()
             .map { (index, value) in
-                Instruction(index: UInt8(index), hex: value)
+                Instruction(hex: value)
             }
     }
 
@@ -40,7 +44,7 @@ class TD4BinaryFile: FileDocument {
             contents = bytes[0..<min(size, 16)]
                 .enumerated()
                 .map { (index, value) in
-                    Instruction(index: UInt8(index), hex: value)
+                    Instruction(hex: value)
                 }
         } else {
             throw CocoaError(.fileReadCorruptFile)
@@ -52,7 +56,36 @@ class TD4BinaryFile: FileDocument {
         return .init(regularFileWithContents: data)
     }
     
-    var asArray: [UInt8] {
-        contents.map{$0.hex}
+    func insertEmptyInstruction(after id: Instruction.ID?) -> Instruction.ID? {
+        guard contents.count < 16 else {
+            return nil
+        }
+        
+        let emptyInstruction = Instruction(hex: 0)
+        guard let id else {
+            contents.append(emptyInstruction)
+            return emptyInstruction.id
+        }
+        if let idIndex = contents.firstIndex(where: {$0.id == id}) {
+            contents.insert(emptyInstruction, at: idIndex + 1)
+        } else {
+            contents.append(emptyInstruction)
+        }
+        return emptyInstruction.id
+    }
+    
+    func removeInstruction(at id: Instruction.ID?) {
+        guard let id else {
+            contents.removeLast()
+            return
+        }
+        guard contents.count > 1 else {
+            return
+        }
+        if let idIndex = contents.firstIndex(where: {$0.id == id}) {
+            contents.remove(at: idIndex)
+        } else {
+            contents.removeLast()
+        }
     }
 }

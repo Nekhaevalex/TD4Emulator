@@ -13,5 +13,6 @@ struct TD4_EmulatorApp: App {
         DocumentGroup(newDocument: TD4BinaryFile()) { file in
             EmulatorView(document: file.$document)
         }
+        .defaultSize(CGSize(width: 500, height: 250))
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @ObservedObject var cpu: TD4CPU
+    @State var cpu: TD4CPU
     
     var body: some View {
         VStack {

@@ -24,44 +24,40 @@ enum TD4CpuError: Error, CustomStringConvertible {
     }
 }
 
-// TD4 CPU object
-class TD4CPU: ObservableObject {
+// TD4 CPU class
+@Observable
+class TD4CPU {
     // General purpose registers
-    @Published var regA: UInt8 = 0
-    @Published var regB: UInt8 = 0
+    var regA: UInt8 = 0
+    var regB: UInt8 = 0
     
     // I/O
-    @Published var regIn: UInt8 = 0
-    @Published var regOut: UInt8 = 0
+    var regIn: UInt8 = 0
+    var regOut: UInt8 = 0
     
     // Special registers
-    @Published var carryFlag: Bool = false
-    @Published var selected: Instruction.ID? = nil
+    var carryFlag: Bool = false
+    var selected: Instruction.ID? = nil
     
     // ROM – program storage
-    @Published var rom: TD4BinaryFile? = TD4BinaryFile()
+    var rom: TD4BinaryFile
     
+    private var execution: Task<(), any Error>?
+    private var running = false
     private var carryFlagDrop: Bool = false
     public var programCounter: UInt8 {
         get {
-            guard let constRom = rom else {
+            guard let instruction = rom.contents.firstIndex(where: {$0.id == selected}) else {
                 return 0
             }
-            guard let instruction = constRom.contents.first(where: {$0.id == selected}) else {
-                return 0
-            }
-            return instruction.index
+            return UInt8(instruction)
         }
         set(value) {
-            guard let constRom = rom else {
+            guard value < rom.contents.count else {
                 selected = nil
                 return
             }
-            guard value < constRom.contents.count else {
-                selected = nil
-                return
-            }
-            selected = constRom.contents[Int(value)].id
+            selected = rom.contents[Int(value)].id
         }
     }
     
@@ -155,8 +151,25 @@ class TD4CPU: ObservableObject {
         carryFlagDrop = false
     }
     
-    public func step(_ program: TD4BinaryFile) throws(TD4CpuError) {
-        let instruction: UInt8 = fetch(program)
+    @MainActor
+    public func run() {
+        running = true
+        self.execution = Task {
+            while running {
+                try step()
+                try await Task.sleep(nanoseconds: 10)
+            }
+        }
+    }
+    
+    @MainActor
+    public func stop() {
+        running = false
+        self.execution?.cancel()
+    }
+    
+    public func step() throws(TD4CpuError) {
+        let instruction: UInt8 = fetch(self.rom)
         
         let (opcode, operand) = decode(instruction)
         

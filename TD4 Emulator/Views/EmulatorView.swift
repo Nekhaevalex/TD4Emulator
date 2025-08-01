@@ -9,11 +9,15 @@ import SwiftUI
 
 struct EmulatorView: View {
     @Binding var document: TD4BinaryFile
-    @StateObject private var cpu: TD4CPU
+    @State private var cpu: TD4CPU
+    
+    @State var running = false
+    @State var runButtonText = "Run"
+    @State var runButtonImage = "play"
     
     init(document: Binding<TD4BinaryFile>) {
         _document = document
-        _cpu = StateObject(wrappedValue: TD4CPU(document.wrappedValue))
+        _cpu = State(wrappedValue: TD4CPU(document.wrappedValue))
     }
     
     var body: some View {
@@ -25,24 +29,39 @@ struct EmulatorView: View {
                 ProgramInputView(value: $document.contents[Int(cpu.programCounter)].hex)
                 // CPU Controls
                 HStack {
-                    Button("Step") {
+                    Button(runButtonText, systemImage: runButtonImage) {
+                        running.toggle()
+                        if running {
+                            runButtonText = "Stop"
+                            runButtonImage = "stop"
+                            cpu.run()
+                        } else {
+                            runButtonText = "Run"
+                            runButtonImage = "play"
+                            cpu.stop()
+                        }
+                    }
+                    
+                    Button("Step", systemImage: "arrow.turn.down.right") {
                         do {
-                            try cpu.step(document)
+                            try cpu.step()
                         } catch {
                             
                         }
                     }
-                    Button("Reset") {
+                    .disabled(running)
+                    
+                    Button("Reset", systemImage: "restart.circle") {
                         cpu.reset()
                     }
+                    .disabled(running)
                 }
                 Spacer()
             }
             .padding(5)
-            .frame(width: 200)
+            .frame(width: 240)
             // Program listing
-            HexEditorView(cpu: cpu)
-                .padding(5)
+            HexEditorView(cpu: $cpu)
         }
         .frame(minWidth: 500)
     }

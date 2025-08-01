@@ -9,7 +9,6 @@ import Foundation
 
 struct Instruction: Identifiable {
     let id = UUID()
-    let index: UInt8
     var hex: UInt8
 }
 
