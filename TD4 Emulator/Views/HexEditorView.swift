@@ -71,6 +71,22 @@ struct HexEditorView: View {
                     cpu.programCounter = 0
                 }
             }
+            .onKeyPress(keys: Set<KeyEquivalent>([
+                .delete,
+                .return,
+                .init(Character(UnicodeScalar(127)))
+            ])) { keyPress in
+                switch keyPress.key {
+                case .delete, .init(Character(UnicodeScalar(127))):
+                    removeInstruction()
+                case .return:
+                    addInstruction()
+                default:
+                    break
+                }
+                return .handled
+            }
+            
             HStack {
                 Spacer()
                 Button {
