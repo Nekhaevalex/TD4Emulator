@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+/// SwiftUI view of current CPU registers state
 struct RegisterView: View {
+    /// Binded TD4 CPU instance
     @State var cpu: TD4CPU
     
     var body: some View {
@@ -19,17 +21,19 @@ struct RegisterView: View {
                             Text("A")
                                 .fixedSize(horizontal: true, vertical: true)
                             TextField("Register A Value", value: $cpu.regA, formatter: HexNumberFormatter())
+                                .frame(width: 25, alignment: .center)
                                 .fixedSize(horizontal: true, vertical: true)
                         }
                         HStack {
                             Text("B")
                                 .fixedSize(horizontal: true, vertical: true)
                             TextField("Register B Value", value: $cpu.regB, formatter: HexNumberFormatter())
+                                .frame(width: 25, alignment: .center)
                                 .fixedSize(horizontal: true, vertical: true)
                         }
                     }
                 }
-                .font(myFont)
+                .font(monospaceFont)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             GroupBox(label: Text("I/O Registers")) {
@@ -38,19 +42,21 @@ struct RegisterView: View {
                         HStack {
                             Text("In")
                                 .fixedSize(horizontal: true, vertical: true)
-                                .font(myFont)
+                                .font(monospaceFont)
                             TextField("Input value", value: $cpu.regIn, formatter: HexNumberFormatter())
+                                .frame(width: 25, alignment: .center)
                                 .fixedSize(horizontal: true, vertical: true)
                         }
                         HStack {
                             Text("Out")
                                 .fixedSize(horizontal: true, vertical: true)
                             TextField("Output value", value: $cpu.regOut, formatter: HexNumberFormatter())
+                                .frame(width: 25, alignment: .center)
                                 .fixedSize(horizontal: true, vertical: true)
                         }
                     }
                 }
-                .font(myFont)
+                .font(monospaceFont)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             GroupBox(label: Text("Special Registers")) {
@@ -60,6 +66,7 @@ struct RegisterView: View {
                             Text("PC")
                                 .fixedSize(horizontal: true, vertical: true)
                             TextField("Program Counter Value", value: $cpu.programCounter, formatter: HexNumberFormatter())
+                                .frame(width: 25, alignment: .center)
                                 .fixedSize(horizontal: true, vertical: true)
                         }
                         Toggle(isOn: $cpu.carryFlag) {
@@ -70,7 +77,7 @@ struct RegisterView: View {
 #endif
                     }
                 }
-                .font(myFont)
+                .font(monospaceFont)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }

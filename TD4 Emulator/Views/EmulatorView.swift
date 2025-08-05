@@ -7,14 +7,24 @@
 
 import SwiftUI
 
+/// SwiftUI view of main window 
 struct EmulatorView: View {
+    /// Binded TD4 binary file instance
     @Binding var document: TD4BinaryFile
     @State private var cpu: TD4CPU
     
-    @State var running = false
-    @State var runButtonText = "Run"
-    @State var runButtonImage = "play"
+    @State private var running = false
+    @State private var runButtonText = "Run"
+    @State private var runButtonImage = "play"
     
+    @State private var stepButtonPopoverIsPresented: Bool = false
+    @State private var stepButtonPopoverText: String = ""
+    
+    @State private var runButtonPopoverIsPresented: Bool = false
+    @State private var runButtonPopoverText: String = ""
+    
+    /// Initializes the view with specified TD4BinaryFile
+    /// - Parameter document: binding of TD4BinaryFile
     init(document: Binding<TD4BinaryFile>) {
         _document = document
         _cpu = State(wrappedValue: TD4CPU(document.wrappedValue))
@@ -34,22 +44,40 @@ struct EmulatorView: View {
                         if running {
                             runButtonText = "Stop"
                             runButtonImage = "stop"
-                            cpu.run()
+                            cpu.run() {error in
+                                guard let error else {
+                                    return
+                                }
+                                runButtonPopoverIsPresented.toggle()
+                                running.toggle()
+                                runButtonPopoverText = error.description
+                                runButtonText = "Run"
+                                runButtonImage = "play"
+                            }
                         } else {
                             runButtonText = "Run"
                             runButtonImage = "play"
                             cpu.stop()
                         }
                     }
+                    .popover(isPresented: $runButtonPopoverIsPresented) {
+                        Text(runButtonPopoverText)
+                            .padding()
+                    }
                     
                     Button("Step", systemImage: "arrow.turn.down.right") {
-                        do {
+                        do throws(TD4CpuError) {
                             try cpu.step()
                         } catch {
-                            
+                            stepButtonPopoverText = error.description
+                            stepButtonPopoverIsPresented.toggle()
                         }
                     }
                     .disabled(running)
+                    .popover(isPresented: $stepButtonPopoverIsPresented) {
+                        Text(stepButtonPopoverText)
+                            .padding()
+                    }
                     
                     Button("Reset", systemImage: "restart.circle") {
                         cpu.reset()
