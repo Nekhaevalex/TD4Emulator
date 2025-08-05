@@ -7,14 +7,18 @@
 
 import SwiftUI
 
+/// SwiftUI view of main window 
 struct EmulatorView: View {
+    /// Binded TD4 binary file instance
     @Binding var document: TD4BinaryFile
     @State private var cpu: TD4CPU
     
-    @State var running = false
-    @State var runButtonText = "Run"
-    @State var runButtonImage = "play"
+    @State private var running = false
+    @State private var runButtonText = "Run"
+    @State private var runButtonImage = "play"
     
+    /// Initializes the view with specified TD4BinaryFile
+    /// - Parameter document: binding of TD4BinaryFile
     init(document: Binding<TD4BinaryFile>) {
         _document = document
         _cpu = State(wrappedValue: TD4CPU(document.wrappedValue))

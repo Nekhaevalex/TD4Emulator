@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// TD4 Emulator Application structure
 @main
 struct TD4_EmulatorApp: App {
     var body: some Scene {

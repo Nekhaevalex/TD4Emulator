@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+/// SwiftUI view of program disassembly
 struct HexEditorView: View {
+    /// Binded TD4 CPU instance
     @Binding var cpu: TD4CPU
     
     fileprivate func addInstruction() {
@@ -41,21 +43,21 @@ struct HexEditorView: View {
             Table(cpu.rom.contents, selection: $cpu.selected) {
                 TableColumn("Address") { instruction in
                     Text(String(format: "%02X", cpu.rom.contents.firstIndex(where: {$0.id == instruction.id})!))
-                        .font(myFont)
+                        .font(monospaceFont)
                 }
                 .width(50)
                 .alignment(.trailing)
                 
                 TableColumn("Hex") {instruction in
                     Text(String(format: "%02X", instruction.hex))
-                        .font(myFont)
+                        .font(monospaceFont)
                 }
                 .width(40)
                 .alignment(.center)
                 
                 TableColumn("Disasm") {instruction in
                     Text(instruction.description)
-                        .font(myFont)
+                        .font(monospaceFont)
                 }
             }
             .onChange(of: cpu.selected, initial: true) { prev, instruction  in

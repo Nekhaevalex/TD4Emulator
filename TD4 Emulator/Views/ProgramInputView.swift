@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+/// SwiftUI view of current instruction value
 struct ProgramInputView: View {
+    /// Current instruction value
     @Binding var value: UInt8
     var body: some View {
         GroupBox("Program Input") {
@@ -27,7 +29,7 @@ struct ProgramInputView: View {
                 TextField("Instruction hex", value: $value, formatter: BinNumberFormatter())
             }
         }
-        .font(myFont)
+        .font(monospaceFont)
     }
 }
 
