@@ -89,19 +89,26 @@ struct HexEditorView: View {
                 return .handled
             }
             
-            HStack {
+            GlassEffectContainer(spacing: 20) {HStack {
                 Spacer()
                 Button {
                     addInstruction()
                     
                 } label: {
                     Image(systemName: "plus")
+                        .frame(width: 10, height: 15)
                 }
+                .buttonStyle(.glass)
+                
                 Button {
                     removeInstruction()
                 } label: {
                     Image(systemName: "minus")
+                        .frame(width: 10, height: 15)
                 }
+                .buttonStyle(.glass)
+            }
+            .padding()
             }
         }
     }

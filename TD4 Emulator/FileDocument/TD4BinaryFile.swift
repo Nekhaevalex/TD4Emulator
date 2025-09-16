@@ -15,6 +15,9 @@ extension UTType {
     static var td4Binary: UTType {
         UTType(exportedAs: "com.example.td4bin")
     }
+    static var td4Text: UTType {
+        UTType(exportedAs: "com.example.s")
+    }
 }
 
 

@@ -20,15 +20,11 @@ enum TD4CpuError: Error, CustomStringConvertible {
     
     /// Returns a human-readable description of the error.
     var description: String {
-        switch self {
-        case .invalidOpcode(opcode: let opcode):
-            return "Invalid opcode: \(String(opcode, radix: 16, uppercase: true))"
-        case .immediateOverflow(value: let value):
-            return "Immediate overflow: \(String(value, radix: 16, uppercase: true))"
-        case .romOverflow:
-            return "ROM overflow"
-        case .halted:
-            return "Halt instruction detected"
+        return switch self {
+            case .invalidOpcode(opcode: let opcode): "Invalid opcode: \(String(opcode, radix: 16, uppercase: true))"
+            case .immediateOverflow(value: let value): "Immediate overflow: \(String(value, radix: 16, uppercase: true))"
+            case .romOverflow: "ROM overflow"
+            case .halted: "Halt instruction detected"
         }
     }
 }

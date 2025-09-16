@@ -17,5 +17,5 @@ Reads/writes TD4 binaries as .td4b/.td4bin files, capable of editing binaries.
 | 0111   | mov         | B          | Im         | B=Im                    |
 | 1001   | out         | B          | Im         | Out=B + Im              |
 | 1011   | out         | Im         | -          | Out=Im                  |
-| 1110   | jnc         | Im         | -          | PC=Im if C!=1           |           
+| 1110   | jnc         | Im         | -          | PC=Im if C!=1           |
 | 1111   | jmp         | Im         | -          | PC=Im                   |

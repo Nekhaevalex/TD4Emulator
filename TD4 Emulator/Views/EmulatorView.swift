@@ -16,6 +16,7 @@ struct EmulatorView: View {
     @State private var running = false
     @State private var runButtonText = "Run"
     @State private var runButtonImage = "play"
+    @State private var runButtonTint: Color = .green
     
     @State private var stepButtonPopoverIsPresented: Bool = false
     @State private var stepButtonPopoverText: String = ""
@@ -44,6 +45,7 @@ struct EmulatorView: View {
                         if running {
                             runButtonText = "Stop"
                             runButtonImage = "stop"
+                            runButtonTint = .red
                             cpu.run() {error in
                                 guard let error else {
                                     return
@@ -53,10 +55,12 @@ struct EmulatorView: View {
                                 runButtonPopoverText = error.description
                                 runButtonText = "Run"
                                 runButtonImage = "play"
+                                runButtonTint = .green
                             }
                         } else {
                             runButtonText = "Run"
                             runButtonImage = "play"
+                            runButtonTint = .green
                             cpu.stop()
                         }
                     }
@@ -64,6 +68,9 @@ struct EmulatorView: View {
                         Text(runButtonPopoverText)
                             .padding()
                     }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.capsule)
+                    .tint(runButtonTint)
                     
                     Button("Step", systemImage: "arrow.turn.down.right") {
                         do throws(TD4CpuError) {
@@ -78,11 +85,15 @@ struct EmulatorView: View {
                         Text(stepButtonPopoverText)
                             .padding()
                     }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.capsule)
                     
                     Button("Reset", systemImage: "restart.circle") {
                         cpu.reset()
                     }
                     .disabled(running)
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.capsule)
                 }
                 Spacer()
             }
